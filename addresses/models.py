@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Addresses(models.Model):
+    DoesNotExit = None
     name = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=13)
     address = models.TextField()

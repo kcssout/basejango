@@ -71,13 +71,22 @@ def addressName(request, name):
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
-        data = JSONParser().parse(request)
-        search_name = data['name']
-        obj = Addresses.objects.get(name=search_name)
 
-        if data['phone_number'] == obj.phone_number: #pw
+        # data = JSONParser().parse(request)
+        print(request.POST.get('name', ''))
+        print(request.POST.get('phone_number', ''))
+
+        name = request.POST.get('name', '')
+        ph = request.POST.get('phone_number', '')
+
+        try:
+            obj = Addresses.objects.get(name=name)
+        except Addresses.DoesNotExit:
+            print('400')
+            return JsonResponse({'code': '1111', 'msg': '로그인 실패 입니다.'}, status=400)
+
+        if ph == obj.phone_number: #pw
             print("success > " + obj.phone_number)
-
-            return HttpResponse(status=200)
+            return JsonResponse({'code': '0000', 'msg': '로그인 성공 입니다.'}, status=200)
         else:
-            return HttpResponse(status=400)
+            return JsonResponse({'code': 'error', 'msg': '로그인 실패 입니다.'}, status=400)
